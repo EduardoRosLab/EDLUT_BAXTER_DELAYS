@@ -1,0 +1,16 @@
+# Package Information for pkg-config
+# Author: 
+# Created: lun sep 28 11:54:50 CEST 2020
+# Licence: 
+
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: edlutkernel
+Description: EDLUT Kernel Library
+Version: 2.0
+Libs: -L${libdir} -ledlutkernel
+Cflags: -I${includedir}
+

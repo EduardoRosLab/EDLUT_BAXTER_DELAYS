@@ -1,0 +1,57 @@
+!!python/object/new:dynamic_reconfigure.encoding.Config
+dictitems:
+  e0_kd: 3.0
+  e0_kp: 22.0
+  e0_max_torque: 4.5
+  e1_kd: 4.0
+  e1_kp: 105.0
+  e1_max_torque: 12.0
+  groups: !!python/object/new:dynamic_reconfigure.encoding.Config
+    dictitems:
+      e0_kd: 3.0
+      e0_kp: 22.0
+      e0_max_torque: 4.5
+      e1_kd: 4.0
+      e1_kp: 105.0
+      e1_max_torque: 12.0
+      groups: !!python/object/new:dynamic_reconfigure.encoding.Config
+        state: []
+      id: 0
+      name: Default
+      parameters: !!python/object/new:dynamic_reconfigure.encoding.Config
+        state: []
+      parent: 0
+      s0_kd: 15.0
+      s0_kp: 65.0
+      s0_max_torque: 16.5
+      s1_kd: 5.0
+      s1_kp: 105.0
+      s1_max_torque: 19.5
+      state: true
+      type: ''
+      w0_kd: 2.5
+      w0_kp: 27.0
+      w0_max_torque: 3.75
+      w1_kd: 3.0
+      w1_kp: 60.0
+      w1_max_torque: 4.5
+      w2_kd: 0.0
+      w2_kp: 0.0
+      w2_max_torque: 0.0
+    state: []
+  s0_kd: 15.0
+  s0_kp: 65.0
+  s0_max_torque: 16.5
+  s1_kd: 5.0
+  s1_kp: 105.0
+  s1_max_torque: 19.5
+  w0_kd: 2.5
+  w0_kp: 27.0
+  w0_max_torque: 3.75
+  w1_kd: 3.0
+  w1_kp: 60.0
+  w1_max_torque: 4.5
+  w2_kd: 0.0
+  w2_kp: 0.0
+  w2_max_torque: 0.0
+state: []

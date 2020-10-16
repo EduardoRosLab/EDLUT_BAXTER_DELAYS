@@ -1,0 +1,12 @@
+<launch>
+
+<!-- WIRELESS ROBOT STATE NODE
+This node avertises Baxter's left arm current state with a time stamp according to
+the main_PC's clock. -->
+<node pkg="edlut_ros" name="wireless_robot_state" type="wireless_robot_state" output="screen" clear_params="true">
+  # Define private parameters for the baxter arm state wrapper
+  <param name="input_topic" value="/robot/joint_states" type="str" />
+  <param name="output_topic" value="/robot/joint_states_delayed" type="str" />
+</node>
+
+</launch>
