@@ -55,7 +55,6 @@ Cerebellar-SNN control of a Baxter robot with sensorimotor time delays. The repo
 
 
 ## Execution 
-### Using real Baxter robot 
 * In the Controller PC: Connect to Baxter robot following http://sdk.rethinkrobotics.com/wiki/Hello_Baxter 
   * Open a terminal: 
   * $ cd ros_ws/
