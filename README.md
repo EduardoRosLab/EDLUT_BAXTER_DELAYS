@@ -63,7 +63,7 @@ Cerebellar-SNN control of a Baxter robot with sensorimotor time delays. The repo
   * $ cd ..
   * $ cd cd EDLUT_BAXTER_DELAYS/rosPackages/ControllerPC
   * $ source devel/setup.bash
-  * Launch the desired experiment: 
+  * Launch the desired experiment (in the launch files, you will have to change the lines pointing to file locations according to your local path): 
     * Cerebellar-SNN torque control of a horizontal circle trajectory with artifically induced delays: 
 	$ roslaunch edlut_ros artificial_delays_circle_trajectory_bio_delayYYms.launch 
 	The cerebellar SNN accounts for a sensorimotor pathway delay of twice YYms (2x YYms), thus, each launch file varies the Kernel elegibility trace accordingly. 
