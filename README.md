@@ -3,7 +3,7 @@ Cerebellar-SNN control of a Baxter robot with sensorimotor time delays. The repo
 
 
 ##  Requirements
-* A computer with at least 8GB of RAM, a multicore CPU, an ENVIDIA GPU with CUDA support, and Linux (Ubuntu 15.10 or Ubuntu 16.04, required for ROS Kinetic) (Controller PC).
+* A computer with at least 8GB of RAM, a multicore CPU, an NVIDIA GPU with CUDA support, and Linux (Ubuntu 15.10 or Ubuntu 16.04, required for ROS Kinetic) (Controller PC).
 * A Baxter robot (it can be simulated using Gazebo, although its behaviour is completely different from the real one).
 * A computer running Ubuntu 16.04 for monitoring purposes (Monitoring PC).
 * A Raspberry Pi 3B+ (RPi). Only if WiFi connection is to be used between the robot and controller. In that case, the RPi operates as a WiFi robot-controller gateway.
