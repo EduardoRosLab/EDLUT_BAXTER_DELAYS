@@ -525,20 +525,6 @@ the last commanded torque reduced by torque_reduction_factor.
   <param name="torque_reduction_factor" value="0.998" type="double" />
 </node>
 
-<!-- RASTER PLOT
-The following nodes plot the spike activity of each cerebellar layer:
-Mossy Fibers, Inferior Olive, Granular Cells, Purkinje Cells and DCN.
-To do so, the neuron range for each layer is specified.-->
-<!-- MOSSY FIBERS -->
-<node machine="monitor_PC" pkg="edlut_ros" name="MF" type="RasterPlot.py" output="screen">
-  <param name="input_topic" value="edlut_ros/simulation/input_spike" type="str" />
-  <param name="figure_name" value="MF" type="str" />
-  <param name="min_neuron_index" value="1" type="int" />
-  <param name="max_neuron_index" value="239" type="int" />
-  <param name="refresh_rate" value="1.0" type="double" />
-</node>
-
-
 <!--ENDPOINT PUBLISHER
 This node publishes the position of the end-effector for monitoring purposes. -->
 <node machine="monitor_PC" name="endpoint_publisher" pkg="edlut_ros" type="xyz_publisher.py" output="screen">
