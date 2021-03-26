@@ -65,36 +65,36 @@ Cerebellar-SNN control of a Baxter robot with sensorimotor time delays. The repo
   * $ source devel/setup.bash
   * Launch the desired experiment (in the launch files, you will have to change the lines pointing to file locations according to your local path):
     * **Cerebellar-SNN torque control with artificially induced time delays**:
-	* Horizontal circle trajectory: $ roslaunch edlut_ros artificial_delays_circle_trajectory_bio_delay50ms.launch
-	* Inclined circle trajectory: $ roslaunch edlut_ros artificial_delays_inclined_circle_trajectory.launch
-	* Horizontal circle + Lissajous sequence: $ roslaunch edlut_ros artificial_delays_circleEight_sequence_bio_delay50ms_10MF_100DCN.launch
+        * Horizontal circle trajectory: $ roslaunch edlut_ros artificial_delays_circle_trajectory_bio_delay50ms.launch
+        * Inclined circle trajectory: $ roslaunch edlut_ros artificial_delays_inclined_circle_trajectory.launch
+        * Horizontal circle + Lissajous sequence: $ roslaunch edlut_ros artificial_delays_circleEight_sequence_bio_delay50ms_10MF_100DCN.launch
 
     * **Cerebellar-ANN torque control with artificially induced time delays**:
-	* Horizontal circle trajectory: $ roslaunch edlut_ros Analog_cerebellum_circle_delays.launch
-	* Inclined circle trajectory: $ roslaunch edlut_ros Analog_cerebellum_inclined_circle_delays.launch
-	* Horizontal circle + Lissajous sequence: $ roslaunch edlut_ros Analog_cerebellum_circle_eight_delays.launch
+        * Horizontal circle trajectory: $ roslaunch edlut_ros Analog_cerebellum_circle_delays.launch
+        * Inclined circle trajectory: $ roslaunch edlut_ros Analog_cerebellum_inclined_circle_delays.launch
+        * Horizontal circle + Lissajous sequence: $ roslaunch edlut_ros Analog_cerebellum_circle_eight_delays.launch
 
     * **PD torque control with artificially induced time delays**:
-	* Horizontal circle trajectory: $ roslaunch edlut_ros PD_circle_delays.launch
-	* Inclined circle trajectory: $ roslaunch edlut_ros PD_inclined_circle_delays.launch
-	* Horizontal circle + Lissajous sequence: $ roslaunch edlut_ros PD_circleEight_delays.launch
+        * Horizontal circle trajectory: $ roslaunch edlut_ros PD_circle_delays.launch
+        * Inclined circle trajectory: $ roslaunch edlut_ros PD_inclined_circle_delays.launch
+        * Horizontal circle + Lissajous sequence: $ roslaunch edlut_ros PD_circleEight_delays.launch
 
     * Note: The induced artificial delays of the previous setups can be changed with ROS dynamic parameters (rqt_reconfigure ROS plugin). To do so: open a terminal, source ./baxter.sh script and run $ rosrun rqt_reconfigure rqt_reconfigure
 
     * **Cerebellar-SNN torque control with varying STDP kernel elegibility trace** and artificially induced time delays performing the horizontal circle trajectory (the cerebellar SNN accounts for a sensorimotor pathway delay of twice YYms (2x YYms), thus, each launch file varies the Kernel elegibility trace accordingly): $ roslaunch edlut_ros artificial_delays_circle_trajectory_bio_delayYYms.launch
 
     * **Cerebellar-SNN torque control with non-deterministic time delays**:
- 	* Symmetric sensorial and motor time delays following a gamma distribution defined by parameters (k = X, theta = Y, offset = Z): $ roslaunch edlut_ros symmetricDelay_gamma_kX_thetaY_offset_Z_circle_bio_delay50ms.launch
-	* Asymmetric sensorial and motor time delays following a gamma distribution defined by parameters (k = X, theta = Y, offset = Z): $ roslaunch edlut_ros asymmetricDelay_gamma_sensorial_3-5_3-5_-5_motor_4-5_4-5_48_inverted_circle_bio_delay50ms
+        * Symmetric sensorial and motor time delays following a gamma distribution defined by parameters (k = X, theta = Y, offset = Z): $ roslaunch edlut_ros symmetricDelay_gamma_kX_thetaY_offset_Z_circle_bio_delay50ms.launch
+        * Asymmetric sensorial and motor time delays following a gamma distribution defined by parameters (k = X, theta = Y, offset = Z): $ roslaunch edlut_ros asymmetricDelay_gamma_sensorial_3-5_3-5_-5_motor_4-5_4-5_48_inverted_circle_bio_delay50ms
 
     * **Cerebellar-SNN torque control over a WiFi connection** of the horizontal circle trajectory: $ roslaunch edlut_ros WiFi_circle_trajectory_learnt.launch
 
     * **Cerebellar-SNN torque control multikernel approach**: $ roslaunch edlut_ros artificial_delays_circle_trajectory_bio_delay50ms_10MF_300_PC_100DCN.launch
 
     * **Factory-default position controller (with no delay)**:
-	* Horizontal circle trajectory: $ roslaunch edlut_ros position_control_mode_circle_trajectory.launch
-	* Inclined circle trajectory: $ roslaunch edlut_ros position_control_mode_inclined_circle_trajectory.launch
-	* Horizontal circle + Lissajous sequence: $ roslaunch edlut_ros position_control_mode_circle_eight_trajectory.launch
+        * Horizontal circle trajectory: $ roslaunch edlut_ros position_control_mode_circle_trajectory.launch
+        * Inclined circle trajectory: $ roslaunch edlut_ros position_control_mode_inclined_circle_trajectory.launch
+        * Horizontal circle + Lissajous sequence: $ roslaunch edlut_ros position_control_mode_circle_eight_trajectory.launch
 
 
 * To use the monitoring tools run the rqt_reconfigure ROS plugin. In the Monitoring PC:
