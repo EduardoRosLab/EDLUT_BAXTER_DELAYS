@@ -114,7 +114,8 @@ int main(int argc, char **argv)
 
 
 	while (!stop_node){
-		CallbackQueue.callAvailable(ros::WallDuration(0.001));
+		////
+		CallbackQueue.callAvailable(ros::WallDuration(0.003));
 		// rate.sleep();
 	}
 

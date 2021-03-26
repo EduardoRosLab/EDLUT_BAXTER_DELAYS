@@ -1,0 +1,334 @@
+<launch>
+
+  <machine name="main_PC" address="192.168.2.2"/>
+
+<!-- GLOBAL PARAMETERS
+  -Use_sim_time: False-Run in real time. True-Run in simulation time
+  -Reference_time: Initialization time. It is set up in edlut simulator node -->
+  <param name="use_sim_time" value="false" type="bool" />
+  <param name="reference_time" value="0.0" type="double" />
+  <param name="wireless_simulation" value="true" type="bool" />
+
+
+<!-- SYNCHRONIZER NODE
+When using simulation time it synchronizes all the other nodes so they all run at the sime time stamps.
+If runnning in real time the synchronizer node will shutdown after the robot has been enabled.
+  -Clock_topics: clock signals published by the other nodes for synchronization purposes
+  -Checking_frequency: rate (Hz) at which the synchronizer checks if the other nodes have finished the current time step
+  -Step_time: size (seconds) of every simulated time step
+-->
+  <node machine="main_PC" pkg="edlut_ros" name="synchronizer_node" type="synchronizer_node" output="screen">
+    <rosparam param="clock_topics">
+      [clock_gazebo, edlut_ros/clock/arm_state]
+     </rosparam>
+    <param name="checking_frequency" value="10000.0" type="double" />
+    <param name="step_time" value="0.002" type="double" />
+  </node>
+
+
+<!-- ROBOT ENABLER NODE
+It enables the robot and puts the LEFT ARM to zero position before start. Once done it publishes a message advertising
+the robot is ready and then the node is shutdown.
+-->
+  <node machine="main_PC" pkg="edlut_ros" name="robot_enabler" type="robot_enabler_node.py" output="screen">
+  </node>
+
+
+<!-- DELAY GENERATOR NODE
+This generates a delay when the wireless scenario is a simulated one. -->
+<node machine="main_PC" pkg="edlut_ros" name="delayGenerator" type="delayGenerator_fixed_node" output="screen" clear_params="true">
+  # Define private parameters for the baxter arm state wrapper
+  <param name="delay_topic" value="/edlut_ros/artificial_delay" type="str" />
+  <param name="sampling_frequency" value="500.0" type="double" />
+  <param name="checking_frequency" value="1000.0" type="double" />
+  <param name="min_delay" value="0.00" type="double" />
+  <param name="max_delay" value="0.00" type="double" />
+  <param name="fixed_delay" value="0.00" type="double" />
+</node>
+
+
+<!-- WIRELESS ROBOT STATE NODE
+This node avertises Baxter's left arm current state with a time stamp according to
+the main_PC's clock. -->
+<node machine="main_PC" pkg="edlut_ros" name="wireless_robot_state" type="wireless_robot_state_for_PD" output="screen" clear_params="true">
+  # Define private parameters for the baxter arm state wrapper
+  <param name="input_topic" value="/robot/joint_states" type="str" />
+  <param name="output_topic" value="/robot/joint_states_PCtimeStamp" type="str" />
+  <param name="artificial_delay_topic" value="/edlut_ros/artificial_delay" type="str" />
+  <param name="sampling_frequency" value="500.0" type="double" />
+</node>
+
+
+<!-- TRAJECTORY FROM FILE GENERATOR NODE
+It generates a trajectory (position and velocity per joint) reading it from
+a .txt file in the format:
+  J0 J1 J2 J3 J4 ...
+  J0 J1 J2 J3 J4 ...
+  .
+  .
+  J0 J1 J2 J3 J4 ...
+Each line contains the position/velocity for each joint. Each line corresponds to
+a sample of the trajectory. One file for position, one file for velocity.
+This node reads the files and publishes the trajectory on the desired position
+and desired velocity topics. A trajectory is generated for every joint (joint_list param).
+The node also generates a control signal and avertises it (control_topic) to notify when the different learning trials start.
+Total number of trials and their length (seconds) is also specified.
+  Q_INTERPOLATOR Version: two different circular trajectories are specified, one
+  with radius R1 and another with radius R2. Via dynamic parameters, the radius
+  of the generated trajectory can be modified online in the range [R1,R2]. -->
+<node machine="main_PC" pkg="edlut_ros" name="q_trajectory_generator" type="q_trajectory_generator_node_compactDelay" output="screen" clear_params="true">
+  # Define private parameters for the EDLUT simulation
+  <param name="number_of_trials" value="1" type="int" />
+  <param name="trial_length" value="10000" type="double" />
+  <param name="joint_state_topic" value="robot/joint_states" type="str" />
+  <param name="update_frequency" value="500.0" type="double" />
+  <param name="samples" value="2000" type="int" />
+  <param name="trajectory_frequency" value="0.25" type="double" />
+  <param name="positions_file_name" value="/home/baxter/catkin_ws_WiFi/src/BaxterCerebellum/src/edlut_ros/trajectory_circle_eight_sequence/circleEight_sequence_position.txt" type="str" />
+  <param name="velocities_file_name" value="/home/baxter/catkin_ws_WiFi/src/BaxterCerebellum/src/edlut_ros/trajectory_circle_eight_sequence/circleEight_sequence_velocity.txt" type="str" />
+  <rosparam param="joint_list">
+    [left_s0,left_s1,left_e0,left_e1,left_w0,left_w1]
+  </rosparam>
+  <rosparam param="max_pos_amplitude">
+    [1.7,1.04, 3.05, 2.61, 3.05, 2.09]
+  </rosparam>
+  <rosparam param="min_pos_amplitude">
+    [-1.7, -2.14, -3.05, -0.05, -3.05, -1.57]
+  </rosparam>
+  <rosparam param="max_vel_amplitude">
+    [2.0, 2.0, 2.0, 2.0, 4.0, 4.0]
+  </rosparam>
+  <rosparam param="min_vel_amplitude">
+    [-2.0, -2.0, -2.0, -2.0, -4.0, -4.0]
+  </rosparam>
+  <param name="desired_position_topic" value="edlut_ros/desired_position/compact" type="str" />
+  <param name="desired_velocity_topic" value="edlut_ros/desired_velocity/compact" type="str" />
+  <param name="control_topic" value="edlut_ros/in_trial" type="str" />
+  <param name="joint_command_topic" value="robot/limb/left/joint_command" type="str" />
+</node>
+
+
+<!-- BAXTER ARM STATE NODE DELAY SIMULATION
+This node avertises Baxter's left arm current state.
+Reads the data coming from Baxter's sensors and publishes the current position
+and velocity for every joint in the specified topics. -->
+<node machine="main_PC" pkg="edlut_ros" name="baxter_arm_stateDelay" type="baxter_arm_state_node_sync_compactDelay" output="screen" clear_params="true">
+  # Define private parameters for the baxter arm state wrapper
+  <param name="input_topic" value="/robot/joint_states_PCtimeStamp" type="str" />
+  <rosparam param="joint_list">
+    [left_s0,left_s1,left_e0,left_e1,left_w0,left_w1,left_w2]
+  </rosparam>
+  <param name="current_position_topic" value="edlut_ros/current_position/compact" type="str" />
+  <param name="current_velocity_topic" value="edlut_ros/current_velocity/compact" type="str" />
+  <param name="clock_topic" value="edlut_ros/clock/arm_state" type="str" />
+  <param name="sampling_frequency" value="500.0" type="double" />
+  <param name="checking_frequency" value="1000.0" type="double" />
+  <param name="sensorial_delay_topic" value="/edlut_ros/sensorial_delay" type="str" />
+</node>
+
+
+<!-- ANALOG CEREBELLUM -->
+<node machine="main_PC" pkg="edlut_ros" name="analog_cerebellum" type="analog_cerebellum.py" output="screen">
+  <param name="limb" value="left" type="str" />
+  <rosparam param="joint_list">
+    [left_s0,left_s1,left_e0,left_e1,left_w0,left_w1]
+  </rosparam>
+  <param name="desired_position_topic" value="edlut_ros/desired_position/compact" type="str" />
+  <param name="desired_velocity_topic" value="edlut_ros/desired_velocity/compact" type="str" />
+  <param name="current_position_topic" value="edlut_ros/current_position/compact" type="str" />
+  <param name="current_velocity_topic" value="edlut_ros/current_velocity/compact" type="str" />
+  <param name="output_topic" value="edlut_ros/motor_command/torque_cerebellum" type="str" />
+  <param name="n_states_per_inputs" value="4" type="int" />
+  <rosparam param="max_pos_amplitude">
+    [-0.51, -0.036, -0.006, 1.80, 0.086, 1.02]
+  </rosparam>
+  <rosparam param="min_pos_amplitude">
+    [-0.93, -0.48, -0.079, 0.59, -0.0125, 0.25]
+  </rosparam>
+  <rosparam param="max_vel_amplitude">
+    [0.795, 0.74, 0.105, 1.788, 0.229, 1.138]
+  </rosparam>
+  <rosparam param="min_vel_amplitude">
+    [-0.69, -0.74, -0.137, -1.785, -0.175, -1.087]
+  </rosparam>
+  <rosparam param="pos_error_gain">
+    <!-- [3.0, 9.0, 10.0, 12.0, 12.0, 9.0] -->
+    <!-- [2.5, 6.0, 6.66, 8.0, 8.0, 6.0] -->
+
+    <!-- MAE = 0.024 after 600 trials -->
+    <!-- [3.0, 6.0, 9.0, 8.0, 8.0, 7.0] -->
+
+    <!-- MAE = 0.024 after 600 trials -->
+    [3.0, 6.0, 9.0, 8.0, 8.0, 8.0]
+  </rosparam>
+  <rosparam param="vel_error_gain">
+    <!-- [3.0, 2.5, 1.0, 1.0, 2.0, 1.0] -->
+    <!-- [2.5, 1.66, 1.0, 0.66, 1.33, 0.66] -->
+
+    <!-- MAE = 0.025 after 600 trials -->
+    <!-- [3.0, 1.66, 2.5, 0.66, 1.33, 1.0] -->
+
+    <!-- MAE = 0.024 after 600 trials -->
+    [3.0, 1.66, 3.0, 0.66, 1.33, 1.5]
+  </rosparam>
+  <rosparam param="output_torque_gain">
+    <!-- [10.5, 22.0, 3.0, 15.0, 2.0, 3.5] -->
+
+    <!-- MAE = 0.025 after 600 trials -->
+    <!-- [10.0, 22.0, 3.0, 15.0, 2.0, 3.5] -->
+
+    <!-- MAE = 0.024 after 600 trials -->
+    [10.0, 22.0, 3.5, 15.0, 2.0, 3.5]
+  </rosparam>
+  <param name="sampling_frequency" value="500.0" type="double" />
+  <param name="node_name" value="analog_cerebellum" type="str" />
+
+</node>
+
+
+<!-- TORQUE ADDITION NODE
+torque PD + torque cerebelo = torque final
+
+  <node machine="main_PC" pkg="edlut_ros" name="final_torque_node" type="torque_addition_node" output="screen" clear_params="true">
+    <param name="input_topic_torque_1" value="edlut_ros/motor_command/torque_cerebellum" type="str" />
+    <param name="input_topic_torque_2" value="empty" type="str" />
+    <param name="output_topic" value="edlut_ros/motor_command/torque_final" type="str" />
+    <param name="sampling_frequency" value="500.0" type="double" />
+    <rosparam param="joint_list">
+      [left_s0,left_s1,left_e0,left_e1,left_w0,left_w1,left_w2]
+    </rosparam>
+  </node>
+-->
+
+<!-- TORQUE Baxter
+torque final sent to Baxter
+-->
+<node machine="main_PC" pkg="edlut_ros" name="torque_command_node" type="baxter_torque_command_node_delays" output="screen">
+  # Define private parameters for the spike decoder
+  <param name="input_topic" value="edlut_ros/motor_command/torque_cerebellum" type="str" />
+  <param name="output_topic" value="robot/limb/left/joint_command" type="str" />
+  <rosparam param="joint_list">
+    [left_s0,left_s1,left_e0,left_e1,left_w0,left_w1,left_w2]
+  </rosparam>
+  <param name="limb" value="left" type="str" />
+  <param name="control_topic" value="edlut_ros/in_trial" type="str" />
+  <param name="sampling_frequency" value="500.0" type="double" />
+  <param name="disable_gravity_compensation" value="true" type="bool" />
+  <param name="gravity_topic" value="robot/limb/left/suppress_gravity_compensation" type="str" />
+  <param name="artificial_delay_topic" value="/edlut_ros/artificial_delay" type="str" />
+</node>
+
+
+<!-- FULL STATE NODE
+This node generates a combined signal of the Robot's current state and the desired state.
+To do so it ensembles the current state (position and velocity) of the Robot with
+the corresponding desired state taking into account the sensorial delay and the delay
+associated to each of the Robot Current State messages received.
+That is: a current state message at time t with a delay t_d corresponds to
+the desired state message generated at t - sensorial_delay - t_d. -->
+<node machine="main_PC" pkg="edlut_ros" name="full_state_node" type="full_state_node" output="screen" clear_params="true">
+  <param name="desired_position_topic" value="edlut_ros/desired_position/compact" type="str" />
+  <param name="desired_velocity_topic" value="edlut_ros/desired_velocity/compact" type="str" />
+  <param name="current_position_topic" value="edlut_ros/current_position/compact" type="str" />
+  <param name="current_velocity_topic" value="edlut_ros/current_velocity/compact" type="str" />
+  <param name="output_topic" value="edlut_ros/full_state/compact" type="str" />
+  <param name="sampling_frequency" value="500.0" type="double" />
+  <rosparam param="joint_list">
+    [left_s0,left_s1,left_e0,left_e1,left_w0,left_w1]
+  </rosparam>
+  <param name="sensorial_delay" value="0.0" type="double" />
+</node>
+
+
+<!--ENDPOINT PUBLISHER
+This node publishes the position of the end-effector for monitoring purposes. -->
+<node machine="main_PC" name="endpoint_publisher" pkg="edlut_ros" type="xyz_publisher.py" output="screen">
+  <param name="limb" value="left" type="str" />
+  <param name="rate" value="500.0" type="double" />
+  <param name="output_topic" value="/edlut_ros/endpoint_position/compact" type="str" />
+</node>
+
+<!-- ############################  PLOT NODES  ############################ -->
+
+<!-- POSITION MAE
+This node creates an animated graph of the position Mean Absolute Error (MAE)
+per trial (trial duration specified). The MAE represented is the mean of the
+specified joints. If only one joint is specified, that joint's MAE is plotted. -->
+<node machine="main_PC" pkg="edlut_ros" name="PMAE_full" type="MAE_position.py" output="screen">
+  <param name="full_state_topic" value="edlut_ros/full_state/compact" type="str" />
+  <param name="duration_trial" value="4" type="double" />
+  <rosparam param="joint_list">
+    [left_s0,left_s1,left_e0,left_e1,left_w0,left_w1]
+  </rosparam>
+  <param name="figure_name" value="Position MAE" type="str" />
+  <param name="refresh_rate" value="1.0" type="double" />
+</node>
+
+
+<!-- PLOT TOPICS -->
+<node machine="main_PC" pkg="rqt_plot" name="plot_torque_cerebellum" type="rqt_plot"
+      args="edlut_ros/motor_command/torque_cerebellum/data[0]
+      edlut_ros/motor_command/torque_cerebellum/data[1]
+      edlut_ros/motor_command/torque_cerebellum/data[2]
+      edlut_ros/motor_command/torque_cerebellum/data[3]
+      edlut_ros/motor_command/torque_cerebellum/data[4]
+      edlut_ros/motor_command/torque_cerebellum/data[5]"/>
+
+
+<!-- PLOT TOPICS-->
+<node machine="main_PC" pkg="rqt_plot" name="plot_topics1" type="rqt_plot"
+      args="edlut_ros/current_position/compact/data[0]
+      edlut_ros/current_position/compact/data[1]
+      edlut_ros/current_position/compact/data[2]
+      edlut_ros/current_position/compact/data[3]
+      edlut_ros/current_position/compact/data[4]
+      edlut_ros/current_position/compact/data[5]
+      edlut_ros/desired_position/compact/data[0]
+      edlut_ros/desired_position/compact/data[1]
+      edlut_ros/desired_position/compact/data[2]
+      edlut_ros/desired_position/compact/data[3]
+      edlut_ros/desired_position/compact/data[4]
+      edlut_ros/desired_position/compact/data[5]"/>
+
+<!-- PLOT TOPICS-->
+<node machine="main_PC" pkg="rqt_plot" name="plot_topics2" type="rqt_plot"
+      args="edlut_ros/current_velocity/compact/data[0]
+      edlut_ros/current_velocity/compact/data[1]
+      edlut_ros/current_velocity/compact/data[2]
+      edlut_ros/current_velocity/compact/data[3]
+      edlut_ros/current_velocity/compact/data[4]
+      edlut_ros/current_velocity/compact/data[5]
+      edlut_ros/desired_velocity/compact/data[0]
+      edlut_ros/desired_velocity/compact/data[1]
+      edlut_ros/desired_velocity/compact/data[2]
+      edlut_ros/desired_velocity/compact/data[3]
+      edlut_ros/desired_velocity/compact/data[4]
+      edlut_ros/desired_velocity/compact/data[5]"/>
+
+
+
+<!-- TRAJECTORY PLOT
+<node machine="main_PC" pkg="edlut_ros" name="trajectory_plot" type="TrajectoryPlot2.py" output="screen">
+  <param name="limb" value="left" type="str" />
+  <param name="refresh_frame" value="50" type="double" />
+  <param name="trajectory_period" value="2.0" type="double" />
+  <param name="trajectory_file" value="/home/baxter/catkin_ws/src/BaxterCerebellum/src/edlut_ros/src/circles/horizontalCircle_1000samples_2seconds_r12_xyz.txt" type="str" />
+</node>
+-->
+
+<!-- RECORD TOPICS TO ROSBAG FILE
+This node saves the messages of the specified topics in a .rosbag file.
+When active, this node is used to save the data of the running experimental
+setup. -->
+ <node pkg="rosbag" type="record" name="rosbag_record"
+       args="record -o $(find edlut_ros)/rosbags/Delays/analogCerebellum_circle_eight_delays
+       /edlut_ros/artificial_delay
+       /edlut_ros/full_state/compact
+       /edlut_ros/motor_command/torque_cerebellum
+       /edlut_ros/endpoint_position/compact
+       /robot/limb/left/gravity_compensation_torques
+       /robot/limb/left/joint_command"
+       />
+
+
+</launch>

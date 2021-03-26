@@ -1,0 +1,127 @@
+------------------------------
+4MF 
+
+// TOTAL NUMBER OF NEURONS
+2352
+
+MF = 96
+CF = 240
+GrC = 1536
+PC = 240
+DCN = 240
+
+// TOTAL NUMBER OF CONNECTIONS
+398784
+------------------------------
+5MF 
+
+// TOTAL NUMBER OF NEURONS
+4770
+
+MF = 120
+CF = 300
+GrC = 3750
+PC = 300
+DCN = 300
+
+// TOTAL NUMBER OF CONNECTIONS
+1177200
+------------------------------
+6MF
+
+// TOTAL NUMBER OF NEURONS
+9000
+
+MF = 144
+CF = 360
+GrC = 7776
+PC = 360
+DCN = 360
+
+// TOTAL NUMBER OF CONNECTIONS
+2883744
+------------------------------
+7MF 
+
+// TOTAL NUMBER OF NEURONS
+15834
+
+MF = 168
+CF = 420
+GrC = 14406
+PC = 420
+DCN = 420
+
+// TOTAL NUMBER OF CONNECTIONS
+6180384
+------------------------------
+8MF 
+
+// TOTAL NUMBER OF NEURONS
+26208
+
+MF = 192
+CF = 480
+GrC = 24576
+PC = 480
+DCN = 480
+
+// TOTAL NUMBER OF CONNECTIONS
+11988864
+------------------------------
+9MF 
+
+// TOTAL NUMBER OF NEURONS
+41202
+
+MF = 216
+CF = 540
+GrC = 39366
+PC = 540
+DCN = 540
+
+// TOTAL NUMBER OF CONNECTIONS
+21533904
+------------------------------
+10MF 
+
+// TOTAL NUMBER OF NEURONS
+62040
+
+MF = 240
+CF = 600
+GrC = 60000
+PC = 600
+DCN = 600
+
+// TOTAL NUMBER OF CONNECTIONS
+36386400
+------------------------------
+11MF 
+
+// TOTAL NUMBER OF NEURONS
+90090
+
+MF = 264
+CF = 660
+GrC = 87846
+PC = 660
+DCN = 660
+
+// TOTAL NUMBER OF CONNECTIONS
+58506624
+------------------------------
+12MF 
+
+// TOTAL NUMBER OF NEURONS
+126864
+
+MF = 288
+CF = 720
+GrC = 124416
+PC = 720
+DCN = 720
+
+// TOTAL NUMBER OF CONNECTIONS
+90287424
+

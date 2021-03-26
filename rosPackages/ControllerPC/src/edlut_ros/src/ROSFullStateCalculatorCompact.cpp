@@ -32,7 +32,7 @@
 void ROSFullStateCalculatorCompact::DesiredPositionCallback(const edlut_ros::AnalogCompactDelay::ConstPtr& msg){
 	// Check if the spike should have been processed previously
 	if (msg->header.stamp.toSec()<this->last_time_desired_pos){
-		ROS_WARN("Error Calculator: Positive position received from a past time. Discarded. Time: %f, Current time: %f.", msg->header.stamp.toSec(), ros::Time::now().toSec());
+		ROS_WARN("Error Calculator: Positive position received from a past time. Discarded. Received Time: %f, Last Time: %f, Current time: %f.", msg->header.stamp.toSec(), this->last_time_desired_pos, ros::Time::now().toSec());
 	} else {
 		edlut_ros::AnalogCompactDelay newMessage;
 		newMessage.header.stamp = msg->header.stamp;
@@ -46,7 +46,7 @@ void ROSFullStateCalculatorCompact::DesiredPositionCallback(const edlut_ros::Ana
 void ROSFullStateCalculatorCompact::CurrentPositionCallback(const edlut_ros::AnalogCompactDelay::ConstPtr& msg){
 	// Check if the spike should have been processed previously
 	if (msg->header.stamp.toSec()<this->last_time_current_pos){
-		ROS_WARN("Error Calculator: Current position received from a past time. Discarded. Time: %f, Current time: %f.", msg->header.stamp.toSec(), ros::Time::now().toSec());
+		ROS_WARN("Error Calculator: Current position received from a past time. Discarded. Received Time: %f, Last Time: %f, Current time: %f.", msg->header.stamp.toSec(), this->last_time_current_pos, ros::Time::now().toSec());
 	} else {
 		edlut_ros::AnalogCompactDelay newMessage;
 		newMessage.header.stamp = msg->header.stamp;
@@ -60,7 +60,7 @@ void ROSFullStateCalculatorCompact::CurrentPositionCallback(const edlut_ros::Ana
 void ROSFullStateCalculatorCompact::DesiredVelocityCallback(const edlut_ros::AnalogCompactDelay::ConstPtr& msg){
 	// Check if the spike should have been processed previously
 	if (msg->header.stamp.toSec()<this->last_time_desired_vel){
-		ROS_WARN("Error Calculator: Desired velocity received from a past time. Discarded. Time: %f, Current time: %f.", msg->header.stamp.toSec(), ros::Time::now().toSec());
+		ROS_WARN("Error Calculator: Desired velocity received from a past time. Discarded. Received Time: %f, Last Time: %f, Current time: %f.", msg->header.stamp.toSec(), this->last_time_desired_vel, ros::Time::now().toSec());
 	} else {
 		edlut_ros::AnalogCompactDelay newMessage;
 		newMessage.header.stamp = msg->header.stamp;
@@ -74,7 +74,7 @@ void ROSFullStateCalculatorCompact::DesiredVelocityCallback(const edlut_ros::Ana
 void ROSFullStateCalculatorCompact::CurrentVelocityCallback(const edlut_ros::AnalogCompactDelay::ConstPtr& msg){
 	// Check if the spike should have been processed previously
 	if (msg->header.stamp.toSec()<this->last_time_current_vel){
-		ROS_WARN("Error Calculator: Current velocity received from a past time. Discarded. Time: %f, Current time: %f.", msg->header.stamp.toSec(), ros::Time::now().toSec());
+		ROS_WARN("Error Calculator: Current velocity received from a past time. Discarded. Received Time: %f, Last Time: %f, Current time: %f.", msg->header.stamp.toSec(), this->last_time_current_vel, ros::Time::now().toSec());
 	} else {
 		edlut_ros::AnalogCompactDelay newMessage;
 		newMessage.header.stamp = msg->header.stamp;

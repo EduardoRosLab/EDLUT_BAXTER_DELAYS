@@ -264,9 +264,10 @@ add_executable(synchronizer_node src/synchronizer_node.cpp)
 add_executable(gazebo_control_node src/gazebo_control_node.cpp)
 add_executable(torque_addition_node src/torque_addition_node.cpp)
 add_executable(moveit src/moveit.cpp)
+add_executable(moveit_from_xyz_file src/moveit_from_xyz_file.cpp)
+add_executable(moveit_circle_eightSequence src/moveit_circle_eightSequence.cpp)
 add_executable(torque_final_node src/torque_final_node.cpp)
 add_executable(torque_final_node_delay src/torque_final_node_delay.cpp)
-add_executable(TEST_cerebellar_torque_publisher src/TEST_cerebellar_torque_publisher.cpp)
 add_executable(wireless_robot_state src/wireless_robot_state.cpp)
 add_executable(baxter_arm_state_node_sync_compactDelay src/baxter_arm_state_node_sync_compactDelay.cpp)
 add_executable(rbf_node_sync_compactDelay src/rbf_node_sync_compactDelay.cpp)
@@ -282,6 +283,7 @@ add_executable(rtt_compute src/rtt_compute.cpp)
 add_executable(torque_command_remaping src/torque_command_remaping.cpp)
 add_executable(baxter_position_command_node_delay src/baxter_position_command_node_delay.cpp)
 add_executable(delayGenerator_fixed_node src/delayGenerator_fixed_node.cpp)
+add_executable(delayGenerator_GammaDistribution_node src/delayGenerator_GammaDistribution_node.cpp)
 add_executable(baxter_torque_command_node_delays src/baxter_torque_command_node_delays.cpp)
 add_executable(baxter_arm_state_node_sync_compactDelay_interpolation src/baxter_arm_state_node_sync_compactDelay_interpolation.cpp)
 add_executable(rbf_node_sync_compactDelay_EventDriven src/rbf_node_sync_compactDelay_EventDriven.cpp)
@@ -320,7 +322,6 @@ add_dependencies(gazebo_control_node edlut_ros_generate_messages_cpp)
 add_dependencies(torque_addition_node edlut_ros_generate_messages_cpp)
 add_dependencies(torque_final_node edlut_ros_generate_messages_cpp)
 add_dependencies(torque_final_node_delay edlut_ros_generate_messages_cpp)
-add_dependencies(TEST_cerebellar_torque_publisher edlut_ros_generate_messages_cpp)
 add_dependencies(wireless_robot_state edlut_ros_generate_messages_cpp)
 add_dependencies(baxter_arm_state_node_sync_compactDelay edlut_ros_generate_messages_cpp)
 add_dependencies(rbf_node_sync_compactDelay edlut_ros_generate_messages_cpp)
@@ -336,6 +337,7 @@ add_dependencies(rtt_compute edlut_ros_generate_messages_cpp)
 add_dependencies(torque_command_remaping edlut_ros_generate_messages_cpp)
 add_dependencies(baxter_position_command_node_delay edlut_ros_generate_messages_cpp)
 add_dependencies(delayGenerator_fixed_node edlut_ros_generate_messages_cpp)
+add_dependencies(delayGenerator_GammaDistribution_node edlut_ros_generate_messages_cpp)
 add_dependencies(baxter_torque_command_node_delays edlut_ros_generate_messages_cpp)
 add_dependencies(baxter_arm_state_node_sync_compactDelay_interpolation edlut_ros_generate_messages_cpp)
 add_dependencies(rbf_node_sync_compactDelay_EventDriven edlut_ros_generate_messages_cpp)
@@ -474,6 +476,14 @@ target_link_libraries(moveit
   ${catkin_LIBRARIES}
   ${Boost_LIBRARIES})
 
+target_link_libraries(moveit_from_xyz_file
+  ${catkin_LIBRARIES}
+  ${Boost_LIBRARIES})
+
+target_link_libraries(moveit_circle_eightSequence
+  ${catkin_LIBRARIES}
+  ${Boost_LIBRARIES})
+
 target_link_libraries(torque_final_node
   ${catkin_LIBRARIES}
   baxter_interface
@@ -484,11 +494,6 @@ target_link_libraries(torque_final_node_delay
   baxter_interface
 )
 
-
-target_link_libraries(TEST_cerebellar_torque_publisher
-  ${catkin_LIBRARIES}
-  baxter_interface
-)
 
 target_link_libraries(wireless_robot_state
   ${catkin_LIBRARIES}
@@ -562,6 +567,11 @@ target_link_libraries(baxter_position_command_node_delay
 )
 
 target_link_libraries(delayGenerator_fixed_node
+  ${catkin_LIBRARIES}
+  baxter_interface
+)
+
+target_link_libraries(delayGenerator_GammaDistribution_node
   ${catkin_LIBRARIES}
   baxter_interface
 )

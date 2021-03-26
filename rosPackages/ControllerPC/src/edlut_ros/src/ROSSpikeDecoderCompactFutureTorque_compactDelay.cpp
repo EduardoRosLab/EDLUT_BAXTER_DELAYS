@@ -115,7 +115,8 @@ std::vector<edlut_ros::AnalogCompactDelay> ROSSpikeDecoderCompactFutureTorque_co
 	double checkpoint = end_time;
 
 	// Process all the spikes in the queue
-	this->CallbackQueue.callAvailable();
+	////
+	this->CallbackQueue.callAvailable(ros::WallDuration(0.003));
 
 	edlut_ros::Spike top_spike;
 
@@ -174,7 +175,7 @@ std::vector<edlut_ros::AnalogCompactDelay> ROSSpikeDecoderCompactFutureTorque_co
 				}
 			}
 		}
-		
+
 		// while (!(this->activity_queue.empty()) &&	top_spike.time<=end_time){
 		// 	//ROS_DEBUG("Spike Decoder: Processing spike with time %f and neuron %d. End time: %f. Current time: %f", top_spike.time, top_spike.neuron_index, end_time, ros::Time::now().toSec());
 		// 	for (unsigned int i=0; i<this->min_neuron_index_pos.size(); ++i){

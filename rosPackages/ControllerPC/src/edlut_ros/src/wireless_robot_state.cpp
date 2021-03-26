@@ -153,7 +153,9 @@ public:
 
 		if (state_queue.size()>1){
 			int index = 1;
-			while (index < (state_queue.size()) && (state_queue[index-1].header.stamp.toSec() + this->delay_queue[index-1]) < (state_queue[index].header.stamp.toSec() + this->delay_queue[index])){
+			// if MSG_Time2 + Delay_Time2 < MSG_Time1 + Delay_Time1 --> MSG_Time2 should be published before MSG_Time1.
+			// Since between two messages there's a time step of 2ms --> The condition is: MSG_Time1 + Delay_Time1 + time_step < MSG_Time2 + Delay_Time2
+			while (index < (state_queue.size()) && (state_queue[index-1].header.stamp.toSec() + this->delay_queue[index-1] + this->time_step) < (state_queue[index].header.stamp.toSec() + this->delay_queue[index])){
 					aux_robotStateMsg = this->state_queue[index];
 					aux_delay = this->delay_queue[index];
 

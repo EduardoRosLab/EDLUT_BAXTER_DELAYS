@@ -223,7 +223,7 @@ int main(int argc, char **argv)
 	}
 
 	while (!stop_node){
-		CallbackQueue.callAvailable(ros::WallDuration(0.001));
+		CallbackQueue.callAvailable(ros::WallDuration(0.003));
 		if (use_sim_time){
 			current_time = ext_clock.GetLastConfirmedTime();
 		}
@@ -248,6 +248,7 @@ int main(int argc, char **argv)
 			// to the reception time at the receiver node to get the motor_delay.
 			// msg.delay = current_time.toSec();
 			msg.delay = ros::Time::now().toSec();
+			// ROS_INFO("MSG TIME STAMP SPIKE DECODER = %f ", msg.delay);
 
 			// If it is a real wireless scenario: publish the torque commands right away
 			if (!wireless_simulation){
@@ -270,6 +271,7 @@ int main(int argc, char **argv)
 			// to each message. When the delay is over (i.e. current_time is greater than generation_time + associated_delay) the message can be published.
 			while (!objTorqueManager.TorqueQueue_Empty() && (top_value.delay + top_delay <= current_time.toSec()) ){
 				output_publisher.publish(top_value);
+				// ROS_INFO("MSG PUBLISHED SPIKE DECODER time = %f , msg_time = %f, msg_delay = %f", ros::Time::now().toSec(), top_value.delay, top_delay);
 
 				objTorqueManager.PopBack_Torque();
 				objTorqueManager.PopBack_Delay();
@@ -305,7 +307,8 @@ int main(int argc, char **argv)
 		// msg.names = joint_list;
 		// msg.header.stamp = current_time;
 		// output_publisher.publish(msg);
-		rate.sleep();
+		////
+		// rate.sleep();
 	}
 
 	ROS_INFO("Ending Spike Decoder node");
