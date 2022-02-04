@@ -1,5 +1,11 @@
 # EDLUT_BAXTER_DELAYS
+
+
 Cerebellar-SNN control of a Baxter robot with sensorimotor time delays. The repository includes EDLUT simulator source code, the ROS packages to perform a closed-loop cerebellar-SNN control and configuration files needed.
+
+###### Please, cite as: 
+
+**Abadía, I., Naveros, F., Ros, E., Carrillo, R. R., & Luque, N. R. (2021). A cerebellar-based solution to the nondeterministic time delay problem in robotic control. Science Robotics, 6(58), eabf2756.**
 
 
 ##  Requirements
